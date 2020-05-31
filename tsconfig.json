@@ -1,0 +1,32 @@
+{
+    "compilerOptions" : {
+        //"declaration"               : true,
+        //"importHelpers"             : true,
+        "experimentalDecorators"    : true,
+//        "noStrictGenericChecks"     : true,
+
+//        "target"                : "es6",
+        // GOOD: does not transpile async/await to generators, BAD : does not stop on exception in async function
+        "target"                : "ES2017",
+
+//        "sourceMap"             : true,
+        "lib"                   : [
+            "es2015",
+            "es2016"
+        ],
+        "module"                : "ESNext",
+        "moduleResolution"      : "Node"
+//        "baseUrl": "."
+//        "plugins": [
+//            { "transform" : "ts-transformer-imports" }
+//        ]
+    },
+
+    "include" : [
+        "src/**/*.ts",
+        "tests/**/*.ts"
+    ],
+
+    "exclude" : [
+    ]
+}
