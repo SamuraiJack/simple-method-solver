@@ -56,3 +56,5 @@ export const optimizeDecolsOrder = function (inputData : InputData) : string {
 
     return JSON.stringify(outerResult)
 }
+
+export const sanityChecker = (a, b) => a + b
