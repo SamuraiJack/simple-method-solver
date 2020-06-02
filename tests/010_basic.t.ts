@@ -31,7 +31,7 @@ StartTest(t => {
                     rightHandSide   : 10,
 
                     coefficients    : new Map([
-                        [ xVar, 1 ]
+                        [ xVar, 2 ]
                     ])
                 })
             ]
@@ -39,11 +39,11 @@ StartTest(t => {
 
         const result = solver.solve()
 
-        t.isDeeply(result.result, new Map([ [ xVar, 10 ] ]), 'Correct result found')
+        t.isDeeply(result.result, new Map([ [ xVar, 5 ] ]), 'Correct result found')
     })
 
 
-    t.iit('Simple case should work for 2 variables', async t => {
+    t.it('Simple case should work for 2 variables', async t => {
         const xVar = Variable.new({ name : 'x' })
         const yVar = Variable.new({ name : 'y' })
 
@@ -94,4 +94,55 @@ StartTest(t => {
         t.isDeeply(result.result, new Map([ [ xVar, 10 ], [ yVar, 10 ] ]), 'Correct result found')
     })
 
+
+    t.it('Simple case should work for 2 variables, inverted (minimum)', async t => {
+        const xVar = Variable.new({ name : 'x' })
+        const yVar = Variable.new({ name : 'y' })
+
+        const variablesList = VariablesList.new()
+
+        variablesList.addVariable(xVar)
+        variablesList.addVariable(yVar)
+
+        const solver = SimplexMethodSolver.new({
+            variablesList   : variablesList,
+
+            targetFunction  : TargetFunction.new({
+                variablesList   : variablesList,
+                type        : ExtremumType.Minimum,
+
+                coefficients    : new Map([
+                    [ xVar, 1 ],
+                    [ yVar, 1 ]
+                ])
+            }),
+
+            equations : [
+                Equation.new({
+                    name            : 'xVar limit',
+                    variablesList   : variablesList,
+                    type            : EquationType.GreaterOrEqual,
+                    rightHandSide   : 10,
+
+                    coefficients    : new Map([
+                        [ xVar, 1 ]
+                    ])
+                }),
+                Equation.new({
+                    name            : 'yVar limit',
+                    variablesList   : variablesList,
+                    type            : EquationType.GreaterOrEqual,
+                    rightHandSide   : 10,
+
+                    coefficients    : new Map([
+                        [ yVar, 1 ]
+                    ])
+                })
+            ]
+        })
+
+        const result = solver.solve()
+
+        t.isDeeply(result.result, new Map([ [ xVar, 10 ], [ yVar, 10 ] ]), 'Correct result found')
+    })
 })
