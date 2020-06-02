@@ -15,7 +15,9 @@ export type Result = {
     result      : { layoutId : string, count : number }[]
 }
 
-export const optimizeDecolsOrder = function (inputData : InputData) : string {
+export const optimizeDecolsOrder = function (input : string) : string {
+    const inputData = JSON.parse(input)
+
     const decoli : Map<string, Decol> = new Map(inputData.decoli.map(decolData => {
         return [
             decolData.id,

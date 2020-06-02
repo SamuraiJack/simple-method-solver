@@ -18,18 +18,15 @@ module.exports = (env = {}) => {
 
     if (isProduction) {
         webpackPlugins.push(
-            // new webpack.optimize.UglifyJsPlugin({
-            //     uglifyOptions : {
-            //         compress : true,
-            //         warnings : false
-            //     }
-            // })
         );
     }
 
     return [
         {
             mode : 'development',
+            optimization: {
+                // minimize: true
+            },
 
             entry : {
                 main : './main.js',
@@ -62,7 +59,7 @@ module.exports = (env = {}) => {
                                     [
                                         "@babel/env",
                                         {
-                                            "targets" : { "browsers" : [ "ie 9" ] },
+                                            "targets" : { "browsers" : [ "ie 7" ] },
                                             modules     : false,
                                             "debug": true,
                                             "corejs": {

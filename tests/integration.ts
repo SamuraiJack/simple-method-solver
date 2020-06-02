@@ -43,6 +43,6 @@ const inputData : InputData = {
     ]
 }
 
-const res = optimizeDecolsOrder(inputData)
+const res = optimizeDecolsOrder(JSON.stringify(inputData))
 
 console.log(JSON.parse(res))
