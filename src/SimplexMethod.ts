@@ -123,7 +123,7 @@ export class TargetFunction extends BaseEquation {
 
 
 export type SimplexSolution = {
-    error?      : Error,
+    error?      : string,
     result?     : Map<Variable, number>
 }
 
@@ -189,19 +189,18 @@ export class SimplexMethodSolver extends Base {
 
 
     solve () : SimplexSolution {
-        // try {
+        try {
             const result = this.convertToCanonical().doSolve()
 
             return {
+                error   : '',
                 result : new Map(
                     Array.from(result.entries()).filter(([ variable, value ]) => this.variablesList.variables.has(variable.name))
                 )
             }
-        // } catch (e) {
-        //     debugger
-        //
-        //     return { error : e }
-        // }
+        } catch (e) {
+            return { error : String(e), result : new Map() }
+        }
     }
 
 

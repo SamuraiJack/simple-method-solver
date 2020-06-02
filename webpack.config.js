@@ -1,23 +1,15 @@
-const RELEASE     = 1;
-const DEVELOPMENT = 2;
-
 const path = require('path');
 const webpack = require('webpack');
 
 module.exports = (env = {}) => {
 
-    const isProduction  = env.production || false,
+    const isProduction  = env.production || true,
           isDevelopment = !isProduction,
           outputSuffix  = isProduction ? '' : '-debug',
           outputPath    = path.resolve(__dirname, 'build');
 
     let webpackPlugins = [
         new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({
-            "TARGET"      : isProduction ? RELEASE : DEVELOPMENT,
-            "DEVELOPMENT" : DEVELOPMENT,
-            "RELEASE"     : RELEASE
-        })
     ];
 
     let babelPlugins = [
@@ -40,7 +32,8 @@ module.exports = (env = {}) => {
             mode : 'development',
 
             entry : {
-                engine : './main.js'
+                main : './main.js',
+                integration : './tests/integration.js'
             },
 
             output : {
@@ -70,6 +63,7 @@ module.exports = (env = {}) => {
                                         "@babel/env",
                                         {
                                             "targets" : { "browsers" : [ "ie 9" ] },
+                                            modules     : false,
                                             "debug": true,
                                             "corejs": {
                                                 "version": "3.6",
