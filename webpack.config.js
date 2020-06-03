@@ -25,7 +25,7 @@ module.exports = (env = {}) => {
         {
             mode : 'development',
             optimization: {
-                // minimize: true
+                minimize: true
             },
 
             entry : {
@@ -59,7 +59,7 @@ module.exports = (env = {}) => {
                                     [
                                         "@babel/env",
                                         {
-                                            "targets" : { "browsers" : [ "ie 7" ] },
+                                            "targets" : { "browsers" : [ "ie 11" ] },
                                             modules     : false,
                                             "debug": true,
                                             "corejs": {

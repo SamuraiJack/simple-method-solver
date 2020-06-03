@@ -1,6 +1,8 @@
 import { Decol, ListLayout, optimize } from "./src/Optimization.js"
 
 export type InputData = {
+    useMinimalOrder : boolean,
+    optimizeBySquare : boolean,
     decoli  : { id : string, square : string }[],
     layouts : {
         id          : string,
@@ -16,7 +18,7 @@ export type Result = {
 }
 
 export const optimizeDecolsOrder = function (input : string) : string {
-    const inputData = JSON.parse(input)
+    const inputData : InputData = JSON.parse(input)
 
     const decoli : Map<string, Decol> = new Map(inputData.decoli.map(decolData => {
         return [
@@ -44,7 +46,7 @@ export const optimizeDecolsOrder = function (input : string) : string {
         return [ decoli.get(requiredData.decolId), requiredData.count ]
     }))
 
-    const result = optimize(decoli, layouts, requiredDecols)
+    const result = optimize(decoli, layouts, requiredDecols, inputData.useMinimalOrder, inputData.optimizeBySquare)
 
     const outerResult : Result = {
         error       : result.error,

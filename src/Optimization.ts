@@ -13,39 +13,13 @@ export class ListLayout extends Base {
     minOrderCount    : number
 }
 
-// class Result {
-//     required    : Map<Decol, number>
-//
-//     result      : Map<ListLayout, number>
-//
-//
-//     getUnusefulSquare () : number {
-//         let decolsCount : Map<Decol, number> = new Map()
-//
-//         this.result.forEach((orderedNumber : number, layout : ListLayout) => {
-//
-//             layout.layout.forEach((count : number, decol : Decol) => {
-//                 let already = decolsCount.get(decol)
-//
-//                 if (already === undefined) { already = 0; decolsCount.set(decol, 0) }
-//
-//
-//                 decolsCount.set(decol, already + count * orderedNumber)
-//             })
-//         })
-//
-//         let unsefulSquare = 0
-//
-//         decolsCount.forEach((count : number, decol : Decol) => {
-//             unsefulSquare += (count - this.required.get(decol)) * decol.square
-//         })
-//
-//         return unsefulSquare
-//     }
-// }
-
-
-export const optimize = (decols : Map<string, Decol>, layouts : Map<string, ListLayout>, requiredDecols : Map<Decol, number>) => {
+export const optimize = (
+    decols : Map<string, Decol>,
+    layouts : Map<string, ListLayout>,
+    requiredDecols : Map<Decol, number>,
+    useMinimimalOrder : boolean,
+    optimizeBySquare : boolean
+) => {
     // Создаем список переменных
     const variablesList = VariablesList.new()
 
@@ -58,18 +32,20 @@ export const optimize = (decols : Map<string, Decol>, layouts : Map<string, List
         variablesList       : variablesList
     })
 
-    layouts.forEach((layout : ListLayout, layoutName : string) => {
+    if (useMinimimalOrder) {
+        layouts.forEach((layout : ListLayout, layoutName : string) => {
 
-        solver.addEquation(Equation.new({
-            name                : 'MinOrderForListLayout: ' + layoutName,
-            rightHandSide       : layout.minOrderCount,
-            type                : EquationType.GreaterOrEqual,
+            solver.addEquation(Equation.new({
+                name                : 'MinOrderForListLayout: ' + layoutName,
+                rightHandSide       : layout.minOrderCount,
+                type                : EquationType.GreaterOrEqual,
 
-            coefficients        : new Map([
-                [ variablesList.getVariable(layoutName), 1 ]
-            ])
-        }))
-    })
+                coefficients        : new Map([
+                    [ variablesList.getVariable(layoutName), 1 ]
+                ])
+            }))
+        })
+    }
 
 
     decols.forEach((decol : Decol, decolName : string) => {
@@ -90,20 +66,33 @@ export const optimize = (decols : Map<string, Decol>, layouts : Map<string, List
     })
 
     // Задаем целевую функцию
-
     const coefficients : Map<Variable, number>  = new Map()
 
-    layouts.forEach((layout : ListLayout, layoutName : string) => {
-        const layoutVariable    = variablesList.getVariable(layoutName)
+    if (optimizeBySquare) {
+        layouts.forEach((layout : ListLayout, layoutName : string) => {
+            const layoutVariable    = variablesList.getVariable(layoutName)
 
-        let coefficientValue    = 0
+            let coefficientValue    = 0
 
-        decols.forEach((decol : Decol, decolName : string) => {
-            coefficientValue += decol.square * (layout.layout.get(decol) || 0)
+            decols.forEach((decol : Decol, decolName : string) => {
+                coefficientValue += decol.square * (layout.layout.get(decol) || 0)
+            })
+
+            coefficients.set(layoutVariable, coefficientValue)
         })
+    } else {
+        layouts.forEach((layout : ListLayout, layoutName : string) => {
+            const layoutVariable    = variablesList.getVariable(layoutName)
 
-        coefficients.set(layoutVariable, coefficientValue)
-    })
+            let coefficientValue    = 0
+
+            decols.forEach((decol : Decol, decolName : string) => {
+                coefficientValue += (layout.layout.get(decol) || 0)
+            })
+
+            coefficients.set(layoutVariable, coefficientValue)
+        })
+    }
 
     solver.targetFunction = TargetFunction.new({
         variablesList       : variablesList,
