@@ -25,7 +25,7 @@ module.exports = (env = {}) => {
         {
             mode : 'development',
             optimization: {
-                minimize: true
+                // minimize: true
             },
 
             entry : {
