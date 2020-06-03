@@ -1,6 +1,9 @@
 import { InputData, optimizeDecolsOrder } from "../main.js"
 
 const inputData : InputData = {
+    optimizeBySquare    : true,
+    useMinimalOrder     : true,
+
     decoli : [
         { id : 'd1', square : '15,0' },
         { id : 'd2', square : '5,0' },
