@@ -114,6 +114,12 @@ export class Equation extends BaseEquation {
         this.coefficients.forEach((coefValue, variable) => {
             this.coefficients.set(variable, coefValue - (anotherEquation.coefficients.get(variable) || 0) * value)
         })
+
+        anotherEquation.coefficients.forEach((coefValue, variable) => {
+            if (!this.coefficients.has(variable))
+                this.coefficients.set(variable, - coefValue * value)
+        })
+
     }
 }
 
