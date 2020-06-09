@@ -230,7 +230,7 @@ export class SimplexMethodSolver extends Base {
 
             if (simplexQ.size === 0) throw new Error("Function is not limited, no solution")
 
-            let variableWithMinQ = this.findVariableWithMinQ(simplexQ)
+            let variableWithMinQ = this.findVariableWithMinQ(simplexQ, resolvingVariable)
 
             this.nullifyCoefficientsOfVariable(variableWithMinQ, this.currentBasis.get(variableWithMinQ), resolvingVariable)
 
@@ -430,12 +430,14 @@ export class SimplexMethodSolver extends Base {
     }
 
 
-    findVariableWithMinQ (simplexQ : Map<Variable, number>) : Variable {
+    findVariableWithMinQ (simplexQ : Map<Variable, number>, resolvingVariable : Variable) : Variable {
         let min = 1e10
         let currentVariable : Variable = null
 
         simplexQ.forEach((simplexQ : number, variable : Variable) => {
-            if (simplexQ < min) {
+            const coef = this.currentBasis.get(variable).coefficients.get(resolvingVariable) || 0
+
+            if (simplexQ < min && coef !== 0) {
                 min     = simplexQ
 
                 currentVariable = variable
