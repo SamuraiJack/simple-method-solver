@@ -13,7 +13,7 @@ module.exports = (env = {}) => {
     ];
 
     let babelPlugins = [
-        '@babel/transform-runtime'
+        // '@babel/transform-runtime'
     ];
 
     if (isProduction) {
@@ -23,6 +23,8 @@ module.exports = (env = {}) => {
 
     return [
         {
+            target: 'node',
+
             mode : 'development',
             optimization: {
                 // minimize: true
@@ -57,16 +59,9 @@ module.exports = (env = {}) => {
                                 // presets : [ 'es2015' ],
                                 presets : [
                                     [
-                                        "@babel/env",
+                                        "@babel/preset-env",
                                         {
-                                            "targets" : { "browsers" : [ "ie 11" ] },
-                                            modules     : false,
-                                            "debug": true,
-                                            "corejs": {
-                                                "version": "3.6",
-                                                "proposals": true
-                                            },
-                                            "useBuiltIns": "usage"
+                                            "targets" : { node : true }
                                         }
                                     ]
                                 ]

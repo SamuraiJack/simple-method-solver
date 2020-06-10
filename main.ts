@@ -62,3 +62,19 @@ export const optimizeDecolsOrder = function (input : string) : string {
 }
 
 export const sanityChecker = (a, b) => a + b
+
+const inputFile     = process.argv[ 2 ]
+const outputFile    = process.argv[ 3 ]
+
+console.log("Starting optimization, input data: " + inputFile)
+
+const fs            = require('fs')
+
+// empty the output in case something will go wrong, so that it won't show stale results
+fs.writeFileSync(outputFile, '')
+
+const input         = fs.readFileSync(inputFile)
+
+fs.writeFileSync(outputFile, optimizeDecolsOrder(input))
+
+console.log("Optimization completed, output data: " + inputFile)
